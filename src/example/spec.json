@@ -1,0 +1,71 @@
+{
+   "root": "main",
+   "elements": {
+      "main": {
+         "type": "Card",
+         "props": {
+            "title": "Actions",
+            "description": "Choose an action below",
+            "maxWidth": "sm",
+            "centered": true
+         },
+         "children": ["button-group"]
+      },
+      "button-group": {
+         "type": "Stack",
+         "props": {
+            "direction": "vertical",
+            "gap": "md"
+         },
+         "children": ["btn-primary", "btn-secondary", "btn-outline"]
+      },
+      "btn-primary": {
+         "type": "Button",
+         "props": {
+            "label": "Primary Action",
+            "variant": "primary"
+         },
+         "on": {
+            "press": {
+               "action": "buttonClick",
+               "params": {
+                  "message": "Primary button clicked"
+               }
+            }
+         },
+         "children": []
+      },
+      "btn-secondary": {
+         "type": "Button",
+         "props": {
+            "label": "Secondary Action",
+            "variant": "secondary"
+         },
+         "on": {
+            "press": {
+               "action": "buttonClick",
+               "params": {
+                  "message": "Secondary button clicked"
+               }
+            }
+         },
+         "children": []
+      },
+      "btn-outline": {
+         "type": "Button",
+         "props": {
+            "label": "Cancel",
+            "variant": "outline"
+         },
+         "on": {
+            "press": {
+               "action": "buttonClick",
+               "params": {
+                  "message": "Cancelled"
+               }
+            }
+         },
+         "children": []
+      }
+   }
+}
