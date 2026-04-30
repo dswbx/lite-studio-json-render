@@ -1,0 +1,669 @@
+{
+   "root": "shell",
+   "elements": {
+      "shell": {
+         "type": "StudioShell",
+         "props": {
+            "projectName": "Supalite PoC 123",
+            "databaseName": "sl3",
+            "branchName": "main",
+            "environment": "STAGING",
+            "statusLabel": "SELF-HOSTED",
+            "navItems": [
+               {
+                  "id": "home",
+                  "label": "Home",
+                  "icon": "home"
+               },
+               {
+                  "id": "table",
+                  "label": "Table Editor",
+                  "icon": "table-2"
+               },
+               {
+                  "id": "sql",
+                  "label": "SQL Editor",
+                  "icon": "terminal"
+               },
+               {
+                  "id": "auth",
+                  "label": "Authentication",
+                  "icon": "key-round"
+               },
+               {
+                  "id": "storage",
+                  "label": "Storage",
+                  "icon": "folder"
+               },
+               {
+                  "id": "settings",
+                  "label": "Project Settings",
+                  "icon": "settings"
+               }
+            ],
+            "activeSection": {
+               "$bindState": "/activeSection"
+            }
+         },
+         "children": ["home", "table", "sql", "auth", "storage", "settings"]
+      },
+      "home": {
+         "type": "Stack",
+         "visible": {
+            "$state": "/activeSection",
+            "eq": "home"
+         },
+         "props": {
+            "direction": "vertical",
+            "gap": "lg",
+            "align": "stretch",
+            "justify": "start",
+            "className": "min-w-0 flex-1 overflow-auto bg-background p-8"
+         },
+         "children": ["home-title", "home-connect", "home-stats"]
+      },
+      "home-title": {
+         "type": "Stack",
+         "props": {
+            "direction": "vertical",
+            "gap": "sm",
+            "className": "max-w-6xl"
+         },
+         "children": ["home-heading", "home-copy"]
+      },
+      "home-heading": {
+         "type": "Heading",
+         "props": {
+            "text": "sl3",
+            "level": "h1"
+         },
+         "children": []
+      },
+      "home-copy": {
+         "type": "Text",
+         "props": {
+            "text": "A lightweight Supabase-compatible backend. Postgres, Auth and Storage, nothing more.",
+            "variant": "muted"
+         },
+         "children": []
+      },
+      "home-connect": {
+         "type": "Card",
+         "props": {
+            "title": "Connect",
+            "description": "Project URL and anon key.",
+            "maxWidth": "full",
+            "centered": false,
+            "className": "max-w-6xl bg-card"
+         },
+         "children": ["home-url", "home-key"]
+      },
+      "home-url": {
+         "type": "Text",
+         "props": {
+            "text": "https://sl3.supalite.app",
+            "variant": "code"
+         },
+         "children": []
+      },
+      "home-key": {
+         "type": "Text",
+         "props": {
+            "text": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsInNpZCI6InNsM2FhYjhkOSJ9.fVgK3w...",
+            "variant": "code"
+         },
+         "children": []
+      },
+      "home-stats": {
+         "type": "Grid",
+         "props": {
+            "columns": 4,
+            "gap": "md",
+            "className": "max-w-6xl"
+         },
+         "children": ["stat-tables", "stat-users", "stat-buckets", "stat-db"]
+      },
+      "stat-tables": {
+         "type": "Card",
+         "props": {
+            "title": "Tables",
+            "description": "5",
+            "maxWidth": "full"
+         },
+         "children": []
+      },
+      "stat-users": {
+         "type": "Card",
+         "props": {
+            "title": "Users",
+            "description": "5",
+            "maxWidth": "full"
+         },
+         "children": []
+      },
+      "stat-buckets": {
+         "type": "Card",
+         "props": {
+            "title": "Buckets",
+            "description": "3",
+            "maxWidth": "full"
+         },
+         "children": []
+      },
+      "stat-db": {
+         "type": "Card",
+         "props": {
+            "title": "DB Size",
+            "description": "24 MB",
+            "maxWidth": "full"
+         },
+         "children": []
+      },
+      "table": {
+         "type": "StudioTableEditor",
+         "visible": {
+            "$state": "/activeSection",
+            "eq": "table"
+         },
+         "props": {
+            "schemas": {
+               "$state": "/schemas"
+            },
+            "tablesBySchema": {
+               "$state": "/tablesBySchema"
+            },
+            "rowsByTable": {
+               "$state": "/rowsByTable"
+            },
+            "schema": {
+               "$bindState": "/table/schema"
+            },
+            "activeTable": {
+               "$bindState": "/table/activeTable"
+            },
+            "openTabs": {
+               "$bindState": "/table/openTabs"
+            },
+            "filter": {
+               "$bindState": "/table/filter"
+            },
+            "editingRow": {
+               "$bindState": "/table/editingRow"
+            }
+         },
+         "children": []
+      },
+      "sql": {
+         "type": "StudioCodePanel",
+         "visible": {
+            "$state": "/activeSection",
+            "eq": "sql"
+         },
+         "props": {
+            "title": "Daily active users",
+            "code": "select\n  date_trunc('day', last_sign_in_at) as day,\n  count(*) as users\nfrom auth.users\nwhere last_sign_in_at is not null\ngroup by 1\norder by 15555 desc;",
+            "templates": [
+               "Create table",
+               "Add RLS policy",
+               "Top tables by size"
+            ],
+            "savedQueries": ["Daily active users", "Orphan rows"]
+         },
+         "children": []
+      },
+      "auth": {
+         "type": "StudioAuthPanel",
+         "visible": {
+            "$state": "/activeSection",
+            "eq": "auth"
+         },
+         "props": {
+            "section": {
+               "$bindState": "/auth/section"
+            },
+            "search": {
+               "$bindState": "/auth/search"
+            },
+            "selectedUserId": {
+               "$bindState": "/auth/selectedUserId"
+            },
+            "users": {
+               "$state": "/authUsers"
+            }
+         },
+         "children": []
+      },
+      "storage": {
+         "type": "StudioStorageExplorer",
+         "visible": {
+            "$state": "/activeSection",
+            "eq": "storage"
+         },
+         "props": {
+            "bucket": {
+               "$bindState": "/storage/bucket"
+            },
+            "selectedFileName": {
+               "$bindState": "/storage/selectedFileName"
+            },
+            "buckets": {
+               "$state": "/buckets"
+            },
+            "filesByBucket": {
+               "$state": "/filesByBucket"
+            }
+         },
+         "children": []
+      },
+      "settings": {
+         "type": "Stack",
+         "visible": {
+            "$state": "/activeSection",
+            "eq": "settings"
+         },
+         "props": {
+            "direction": "vertical",
+            "gap": "md",
+            "className": "min-w-0 flex-1 overflow-auto bg-background p-8"
+         },
+         "children": ["settings-heading", "settings-card"]
+      },
+      "settings-heading": {
+         "type": "Heading",
+         "props": {
+            "text": "Project Settings",
+            "level": "h2"
+         },
+         "children": []
+      },
+      "settings-card": {
+         "type": "Card",
+         "props": {
+            "title": "General",
+            "description": "Project name: sl3 / Project ID: eygxbmggewdwkztnncsw",
+            "maxWidth": "full",
+            "centered": false,
+            "className": "max-w-3xl bg-card"
+         },
+         "children": []
+      }
+   },
+   "state": {
+      "activeSection": "table",
+      "table": {
+         "schema": "public",
+         "activeTable": "todos",
+         "openTabs": ["todos"],
+         "filter": "",
+         "editingRow": null
+      },
+      "auth": {
+         "section": "users",
+         "search": "",
+         "selectedUserId": null
+      },
+      "storage": {
+         "bucket": "avatars",
+         "selectedFileName": null
+      },
+      "schemas": ["public", "auth", "storage"],
+      "tablesBySchema": {
+         "public": [
+            {
+               "name": "todos",
+               "rls": "unrestricted",
+               "columns": [
+                  {
+                     "name": "id",
+                     "type": "int4",
+                     "pk": true
+                  },
+                  {
+                     "name": "title",
+                     "type": "text"
+                  },
+                  {
+                     "name": "description",
+                     "type": "text",
+                     "nullable": true
+                  },
+                  {
+                     "name": "done",
+                     "type": "bool",
+                     "default": "false"
+                  },
+                  {
+                     "name": "created_at",
+                     "type": "timestamptz",
+                     "default": "now()"
+                  }
+               ]
+            },
+            {
+               "name": "profiles",
+               "rls": "rls enabled",
+               "columns": [
+                  {
+                     "name": "id",
+                     "type": "uuid",
+                     "pk": true
+                  },
+                  {
+                     "name": "username",
+                     "type": "text"
+                  },
+                  {
+                     "name": "avatar_url",
+                     "type": "text",
+                     "nullable": true
+                  },
+                  {
+                     "name": "bio",
+                     "type": "text",
+                     "nullable": true
+                  },
+                  {
+                     "name": "updated_at",
+                     "type": "timestamptz",
+                     "default": "now()"
+                  }
+               ]
+            },
+            {
+               "name": "posts",
+               "rls": "rls enabled",
+               "columns": [
+                  {
+                     "name": "id",
+                     "type": "int8",
+                     "pk": true
+                  },
+                  {
+                     "name": "author_id",
+                     "type": "uuid"
+                  },
+                  {
+                     "name": "title",
+                     "type": "text"
+                  },
+                  {
+                     "name": "body",
+                     "type": "text",
+                     "nullable": true
+                  },
+                  {
+                     "name": "published",
+                     "type": "bool",
+                     "default": "false"
+                  },
+                  {
+                     "name": "created_at",
+                     "type": "timestamptz",
+                     "default": "now()"
+                  }
+               ]
+            },
+            {
+               "name": "api_keys",
+               "rls": "rls enabled",
+               "columns": [
+                  {
+                     "name": "id",
+                     "type": "uuid",
+                     "pk": true
+                  },
+                  {
+                     "name": "user_id",
+                     "type": "uuid"
+                  },
+                  {
+                     "name": "label",
+                     "type": "text"
+                  },
+                  {
+                     "name": "last_used",
+                     "type": "timestamptz",
+                     "nullable": true
+                  },
+                  {
+                     "name": "created_at",
+                     "type": "timestamptz",
+                     "default": "now()"
+                  }
+               ]
+            }
+         ],
+         "auth": [
+            {
+               "name": "users",
+               "rls": "protected",
+               "columns": []
+            },
+            {
+               "name": "sessions",
+               "rls": "protected",
+               "columns": []
+            },
+            {
+               "name": "refresh_tokens",
+               "rls": "protected",
+               "columns": []
+            }
+         ],
+         "storage": [
+            {
+               "name": "buckets",
+               "rls": "rls enabled",
+               "columns": []
+            },
+            {
+               "name": "objects",
+               "rls": "rls enabled",
+               "columns": []
+            }
+         ]
+      },
+      "rowsByTable": {
+         "public.todos": [
+            {
+               "id": 1,
+               "title": "first todo",
+               "description": null,
+               "done": false,
+               "created_at": "2026-04-30 09:12:04+00"
+            },
+            {
+               "id": 2,
+               "title": "set up RLS",
+               "description": "add policies for select/update",
+               "done": true,
+               "created_at": "2026-04-30 09:14:21+00"
+            },
+            {
+               "id": 3,
+               "title": "write API client",
+               "description": "gen types from supabase-js",
+               "done": false,
+               "created_at": "2026-04-30 09:32:55+00"
+            },
+            {
+               "id": 4,
+               "title": "invite team",
+               "description": null,
+               "done": false,
+               "created_at": "2026-04-30 10:01:11+00"
+            },
+            {
+               "id": 5,
+               "title": "connect domain",
+               "description": "CNAME -> sl3.supalite.app",
+               "done": false,
+               "created_at": "2026-04-30 11:42:08+00"
+            }
+         ],
+         "public.profiles": [
+            {
+               "id": "7d2c9e...2a1",
+               "username": "aria",
+               "avatar_url": "https://cdn/u/aria.png",
+               "bio": "building things",
+               "updated_at": "2026-04-29 10:00:00+00"
+            },
+            {
+               "id": "a14b21...7e9",
+               "username": "finn",
+               "avatar_url": null,
+               "bio": null,
+               "updated_at": "2026-04-28 18:22:11+00"
+            },
+            {
+               "id": "0099fe...b21",
+               "username": "mxchen",
+               "avatar_url": "https://cdn/u/mx.png",
+               "bio": "pg + ts",
+               "updated_at": "2026-04-30 02:14:09+00"
+            }
+         ],
+         "public.posts": [
+            {
+               "id": 101,
+               "author_id": "7d2c9e...2a1",
+               "title": "Why supalite",
+               "body": "The smallest viable backend.",
+               "published": true,
+               "created_at": "2026-04-29 14:00:00+00"
+            },
+            {
+               "id": 102,
+               "author_id": "a14b21...7e9",
+               "title": "Self-hosting Postgres in 2026",
+               "body": null,
+               "published": false,
+               "created_at": "2026-04-30 08:11:00+00"
+            }
+         ],
+         "public.api_keys": [
+            {
+               "id": "k_01",
+               "user_id": "7d2c9e...2a1",
+               "label": "cli",
+               "last_used": "2026-04-30 11:05:09+00",
+               "created_at": "2026-04-15 10:00:00+00"
+            },
+            {
+               "id": "k_02",
+               "user_id": "7d2c9e...2a1",
+               "label": "staging",
+               "last_used": null,
+               "created_at": "2026-04-22 10:00:00+00"
+            }
+         ]
+      },
+      "authUsers": [
+         {
+            "id": "7d2c9e94-1a4b-4c2e-9f0a-c4a3d31a02a1",
+            "email": "aria@supalite.app",
+            "provider": "email",
+            "created": "2026-04-15 09:14:00",
+            "last": "2026-04-30 11:21:08",
+            "confirmed": true
+         },
+         {
+            "id": "a14b2103-8d72-49ca-b21f-c012ee8f47e9",
+            "email": "finn@example.com",
+            "provider": "github",
+            "created": "2026-04-18 14:02:00",
+            "last": "2026-04-29 17:42:00",
+            "confirmed": true
+         },
+         {
+            "id": "0099fec1-32ad-4e22-9911-9ae44e21cb21",
+            "email": "mxchen@gmail.com",
+            "provider": "google",
+            "created": "2026-04-22 10:55:00",
+            "last": "2026-04-30 03:14:02",
+            "confirmed": true
+         },
+         {
+            "id": "e5c1ad77-91bb-4099-8ddc-b6f0731d4d44",
+            "email": "kai+test@supalite.app",
+            "provider": "email",
+            "created": "2026-04-25 18:11:00",
+            "last": "2026-04-30 02:08:55",
+            "confirmed": false
+         },
+         {
+            "id": "8ac2bb01-4501-4c91-92ef-2a04e1f9a3c0",
+            "email": "pat@example.com",
+            "provider": "github",
+            "created": "2026-04-27 12:14:00",
+            "last": null,
+            "confirmed": false
+         }
+      ],
+      "buckets": [
+         {
+            "name": "avatars",
+            "visibility": "public",
+            "files": 142,
+            "size": "12.4 MB"
+         },
+         {
+            "name": "attachments",
+            "visibility": "private",
+            "files": 38,
+            "size": "212.0 MB"
+         },
+         {
+            "name": "exports",
+            "visibility": "private",
+            "files": 6,
+            "size": "1.4 GB"
+         }
+      ],
+      "filesByBucket": {
+         "avatars": [
+            {
+               "name": "aria.png",
+               "type": "image/png",
+               "size": "88.2 KB",
+               "modified": "2026-04-29 10:00:00"
+            },
+            {
+               "name": "mx.png",
+               "type": "image/png",
+               "size": "102.1 KB",
+               "modified": "2026-04-30 02:14:09"
+            },
+            {
+               "name": "__placeholder.svg",
+               "type": "image/svg+xml",
+               "size": "1.2 KB",
+               "modified": "2026-04-15 09:00:00"
+            }
+         ],
+         "attachments": [
+            {
+               "name": "invoice-0042.pdf",
+               "type": "application/pdf",
+               "size": "212.4 KB",
+               "modified": "2026-04-22 16:01:00"
+            },
+            {
+               "name": "export-2026-04.csv",
+               "type": "text/csv",
+               "size": "4.1 MB",
+               "modified": "2026-04-30 00:00:00"
+            }
+         ],
+         "exports": [
+            {
+               "name": "db-2026-04-30.sql.gz",
+               "type": "application/gzip",
+               "size": "215.8 MB",
+               "modified": "2026-04-30 02:00:00"
+            }
+         ]
+      }
+   }
+}

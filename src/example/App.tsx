@@ -1,6 +1,5 @@
-import App from "@/App";
-import spec from "./spec.json";
+import SupaliteJsonRenderExample from "./SupaliteJsonRenderExample";
 
 export default function ExampleApp() {
-   return <App spec={spec} />;
+   return <SupaliteJsonRenderExample />;
 }

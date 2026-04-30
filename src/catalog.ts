@@ -16,6 +16,49 @@ const validationCheckSchema = z
 
 const validateOnSchema = z.enum(["change", "blur", "submit"]).nullable();
 
+const studioNavItemSchema = z.object({
+  id: z.string(),
+  label: z.string(),
+  icon: z.string().nullable(),
+});
+
+const studioColumnSchema = z.object({
+  name: z.string(),
+  type: z.string(),
+  pk: z.boolean().nullable(),
+  nullable: z.boolean().nullable(),
+  default: z.string().nullable(),
+});
+
+const studioTableSchema = z.object({
+  name: z.string(),
+  rls: z.enum(["unrestricted", "rls enabled", "protected"]),
+  columns: z.array(studioColumnSchema),
+});
+
+const studioUserSchema = z.object({
+  id: z.string(),
+  email: z.string(),
+  provider: z.enum(["email", "github", "google"]),
+  created: z.string(),
+  last: z.string().nullable(),
+  confirmed: z.boolean(),
+});
+
+const studioBucketSchema = z.object({
+  name: z.string(),
+  visibility: z.enum(["public", "private"]),
+  files: z.number(),
+  size: z.string(),
+});
+
+const studioFileSchema = z.object({
+  name: z.string(),
+  type: z.string(),
+  size: z.string(),
+  modified: z.string(),
+});
+
 // =============================================================================
 // shadcn/ui Component Definitions
 // =============================================================================
@@ -476,6 +519,73 @@ export const shadcnComponentDefinitions = {
     events: ["change"],
     description:
       "Page navigation. Use { $bindState } on page for current page number.",
+  },
+
+  // ==========================================================================
+  // Studio Dashboard Components
+  // ==========================================================================
+
+  StudioShell: {
+    props: z.object({
+      projectName: z.string(),
+      databaseName: z.string(),
+      branchName: z.string(),
+      environment: z.string().nullable(),
+      statusLabel: z.string().nullable(),
+      activeSection: z.string().nullable(),
+      navItems: z.array(studioNavItemSchema),
+    }),
+    slots: ["default"],
+    description:
+      "Supabase Studio-style dashboard shell with top bar, icon nav rail, and content region. Bind activeSection for navigation.",
+  },
+
+  StudioTableEditor: {
+    props: z.object({
+      schemas: z.array(z.string()),
+      tablesBySchema: z.record(z.string(), z.array(studioTableSchema)),
+      rowsByTable: z.record(z.string(), z.array(z.record(z.string(), z.unknown()))),
+      schema: z.string().nullable(),
+      activeTable: z.string().nullable(),
+      openTabs: z.array(z.string()).nullable(),
+      filter: z.string().nullable(),
+      editingRow: z.number().nullable(),
+    }),
+    description:
+      "Supalite table editor with schema picker, table tabs, dense data grid, and row edit drawer. Bind schema, activeTable, openTabs, filter, and editingRow.",
+  },
+
+  StudioAuthPanel: {
+    props: z.object({
+      section: z.enum(["overview", "users", "providers"]).nullable(),
+      search: z.string().nullable(),
+      selectedUserId: z.string().nullable(),
+      users: z.array(studioUserSchema),
+    }),
+    description:
+      "Supalite authentication dashboard with auth sidebar, users table, providers view, and user drawer. Bind section, search, and selectedUserId.",
+  },
+
+  StudioStorageExplorer: {
+    props: z.object({
+      bucket: z.string().nullable(),
+      selectedFileName: z.string().nullable(),
+      buckets: z.array(studioBucketSchema),
+      filesByBucket: z.record(z.string(), z.array(studioFileSchema)),
+    }),
+    description:
+      "Supalite storage explorer with bucket sidebar, file list, and file detail panel. Bind bucket and selectedFileName.",
+  },
+
+  StudioCodePanel: {
+    props: z.object({
+      title: z.string(),
+      code: z.string(),
+      templates: z.array(z.string()).nullable(),
+      savedQueries: z.array(z.string()).nullable(),
+    }),
+    description:
+      "Studio-style SQL editor surface with template sidebar, saved queries, and a syntax-colored code panel.",
   },
 };
 
