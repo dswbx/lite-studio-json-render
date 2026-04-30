@@ -3,9 +3,7 @@ import {
    JSONUIProvider,
    Renderer,
    type Spec,
-   createStateStore,
 } from "@json-render/react";
-import { useMemo } from "react";
 import { ThemeProvider } from "./ui/theme-provider";
 import { ModeToggle } from "./ui/mode-toggle";
 import { registry as defaultRegistry } from "./default-registry";
@@ -17,11 +15,18 @@ export type AppProps = {
 
 export default function App({ spec, registry: _registry }: AppProps) {
    const registry = _registry ?? defaultRegistry;
+   const isStudioShell =
+      !!spec?.root && spec.elements?.[spec.root]?.type === "StudioShell";
+
    return (
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-         <div className="flex flex-col h-screen p-8 gap-4">
-            <ModeToggle />
-            <JSONUIProvider registry={registry}>
+         <div
+            className={
+               isStudioShell ? "h-screen" : "flex h-screen flex-col gap-4 p-8"
+            }
+         >
+            {!isStudioShell && <ModeToggle />}
+            <JSONUIProvider registry={registry} initialState={spec?.state ?? {}}>
                <Renderer spec={spec} registry={registry} />
             </JSONUIProvider>
          </div>
